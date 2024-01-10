@@ -40,10 +40,3 @@ const localPassport = function(passport){
 
 export default localPassport
 
-
-// passport.serializeUser((user, done) => done(null, user._id));   
-// passport.deserializeUser(async (userId, done) => {
-//     const user = await User.findById(userId).lean()
-//     console.log("real user", user)
-//     return done(null, user);
-// });

@@ -10,7 +10,8 @@ const router = express.Router();
 
 // Idea Index Page
 router.get('/', validateUsers, async(req, res) =>{
-    const ideas = await Idea.find().lean()
+    //const { user: { id } } = req
+    const ideas = await Idea.find({ user: req.user._id }).lean()
     res.status(200, ideas)
     res.render('ideas/index', {
         ideas:ideas
@@ -53,7 +54,10 @@ router.post('/', validateUsers,  async(req, res) =>{
    } else {
     const newUser = {
         title: req.body.title,
-        details: req.body.details,    
+        details: req.body.details,
+        user: req.user._id
+        
+       
         
     }
      await new Idea(newUser).save();

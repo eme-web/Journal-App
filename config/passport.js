@@ -7,38 +7,43 @@ import User from "../models/User.js"
 
 
 const localPassport = function(passport){
-    passport.use(new LocalStrategy({usernameField: 'email'},
-    async(email, password, done) => {
-        // Match User
-        const user = await User.findOne({email}).lean()
-
-        if(!user) return done(null, false, {message: "No user Found"});
-
-         // Match password
-    bcrypt.compare(password, user.password, (err, isMatch) =>{
-        if(err) throw err
-        if(isMatch){
-            return done(null, user);
-        } else {
-            return done(null, false, {message: "Password Incorrect"});
-        }
-    })
+    passport.use(new LocalStrategy({usernameField: 'email'}, 
+    async (email, password, done) => {
+            //Match User
+         User.findOne({email}).then(user => {
+            if(!user) {
+                return done(null, false, {message: "No user Found"});
+            } 
+            // Match password
+            bcrypt.compare(password, user.password, (err, isMatch) => {
+                if(err) throw err;
+                if(isMatch){
+                    return done(null, user);
+                } else {
+                    return done(null, false, {message: 'Password Incorrect'});
+                }
+            })
+         })
+    })); 
     
-    }));
-
     passport.serializeUser(function(user, done) {
-        process.nextTick(function() {
-            return done(null, user._id)});
+        done(null, user._id);
     });
-    passport.deserializeUser(function(userid, done) {
-        process.nextTick(function() {
-            const user = User.findById(userid).lean()
-            return done(null, user);
-        });
-            
+    passport.deserializeUser(async (userId, done) => {
+        const user = await User.findById(userId) 
+        return done(null, user);
     });
-      
 }
+    
+  
+
 
 export default localPassport
 
+
+// passport.serializeUser((user, done) => done(null, user._id));   
+// passport.deserializeUser(async (userId, done) => {
+//     const user = await User.findById(userId).lean()
+//     console.log("real user", user)
+//     return done(null, user);
+// });

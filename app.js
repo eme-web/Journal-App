@@ -21,7 +21,6 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 connectDB()
-
 localPassport(passport)
 
 // Handlebars Middleware
@@ -44,9 +43,13 @@ app.use(methodOverride('_method'));
 
 // Express session
 app.use(session({
+    key: 'user_id',
     secret: 'secret',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
   }));
 
   // passport middleware
@@ -61,6 +64,7 @@ app.use(function(req, res, next){
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error')
     res.locals.user = req.user || null;
+    console.log("locals",req.user)
     next();
 });
 
@@ -80,9 +84,6 @@ app.get('/', (req, res) =>{
 app.get('/about', (req, res) =>{
     res.render("About")
 });
-
-
-
 
 
 

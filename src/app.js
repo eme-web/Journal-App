@@ -79,7 +79,7 @@ app.get('/', (req, res) =>{
 
 //About Route
 app.get('/about', (req, res) =>{
-    res.render("About")
+    res.render("about")
 });
 
 

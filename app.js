@@ -74,7 +74,7 @@ app.use('/users', users)
 // Index route
 app.get('/', (req, res) =>{
     const title = "Welcome"
-    res.render(__dirname + "/views/Index", {
+    res.render(__dirname + "/views/index", {
         title: title
     })
 });

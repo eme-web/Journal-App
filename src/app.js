@@ -9,14 +9,12 @@ import flash from "connect-flash";
 import session from "express-session";
 import ideas from "./routes/ideas.js";
 import users from "./routes/users.js"
-import path from "path";
-import { fileURLToPath } from "url";
+import __dirname from "./utils.js";
+import * as  path from "path";
 import localPassport from "./config/passport.js";
 
-dotenv.config({path: "./config/config.env"})
+dotenv.config()
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -28,9 +26,9 @@ app.engine('handlebars', engine({
     defaultLayout: 'main',
     allowProtoPropertiesByDefault: true
 }));
-
-app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'handlebars')
+app.set('views', path.resolve(__dirname + '/views'));
+
 // app.use(express.static(path.join(__dirname, 'public')));
 
 // Body parser middleware
@@ -74,7 +72,7 @@ app.use('/users', users)
 // Index route
 app.get('/', (req, res) =>{
     const title = "Welcome"
-    res.render(__dirname + "/index", {
+    res.render("index", {
         title: title
     })
 });
